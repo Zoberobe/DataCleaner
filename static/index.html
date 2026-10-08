@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DataCleaner</title>
+  <style>
+    :root { color-scheme: light; font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif; color: #19304a; background: #f4f7fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; }
+    main { max-width: 860px; margin: 0 auto; padding: 64px 24px 96px; }
+    .eyebrow { margin: 0 0 8px; color: #426783; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    h1 { margin: 0; font-size: clamp(32px, 5vw, 48px); letter-spacing: -.04em; }
+    .lead { max-width: 620px; margin: 16px 0 32px; color: #53677a; font-size: 18px; line-height: 1.55; }
+    .panel { background: #fff; border: 1px solid #dce6ed; border-radius: 16px; padding: 28px; box-shadow: 0 14px 32px #223a5510; }
+    label { display: block; margin-bottom: 12px; font-weight: 700; }
+    .file-picker { display: flex; align-items: center; gap: 10px; min-height: 56px; padding: 10px 16px; border: 1px dashed #9bb3c8; border-radius: 10px; background: #f8fbfe; color: #19304a; }
+    .file-picker input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+    .file-button { display: inline-flex; align-items: center; margin: 0; padding: 8px 11px; border: 1px solid #9bb3c8; border-radius: 6px; background: white; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .file-picker:focus-within { outline: 2px solid #176c89; outline-offset: 2px; }
+    #file-name { overflow: hidden; color: #53677a; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+    .hint { margin: 12px 0 22px; color: #607488; font-size: 14px; line-height: 1.5; }
+    .sample-links { display: flex; flex-wrap: wrap; gap: 12px; margin: -8px 0 24px; font-size: 14px; }
+    .sample-links a { color: #176c89; font-weight: 700; text-underline-offset: 3px; }    button, .download { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 18px; border: 0; border-radius: 9px; background: #176c89; color: white; font: inherit; font-weight: 700; text-decoration: none; cursor: pointer; }
+    button:hover, .download:hover { background: #11546b; }
+    button:disabled { opacity: .55; cursor: wait; }
+    #status { min-height: 24px; margin: 14px 0 0; color: #9b2f29; }
+    #status.ok { color: #245c48; }
+    #result { margin-top: 28px; }
+    h2 { margin: 0 0 18px; font-size: 22px; }
+    .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .metric { padding: 16px; border: 1px solid #dce6ed; border-radius: 11px; background: #f8fbfe; }
+    .metric strong { display: block; font-size: 27px; }
+    .metric span { color: #53677a; font-size: 13px; }
+    .downloads { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+    .download.secondary { background: #e3edf3; color: #194762; }
+    .download.secondary:hover { background: #cedfe9; }
+    .note { margin: 17px 0 0; color: #607488; font-size: 14px; }
+    @media (max-width: 620px) { main { padding-top: 36px; } .panel { padding: 20px; } .metrics { grid-template-columns: repeat(2, 1fr); } }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">DataCleaner</p>
+    <h1>Customer data ready to import</h1>
+    <p class="lead">Upload a customer spreadsheet. Get standardized records and a report showing the row, column, and reason for every rejection.</p>
+    <section class="panel" aria-label="Upload spreadsheet">
+      <form id="upload-form">
+        <label for="file">Customer spreadsheet</label>
+        <div class="file-picker">
+          <input id="file" name="upload" type="file" accept=".csv,.xlsx" required>
+          <label class="file-button" for="file">Choose a file</label>
+          <span id="file-name">No file selected</span>
+        </div>
+        <p class="hint">UTF-8 CSV or XLSX, up to 5 MB and 10,000 data rows. Header: name, email, phone, birth_date.</p>
+        <div class="sample-links" aria-label="Fictional sample files">
+          <a href="/api/sample/csv" download="sample_customers.csv">Download sample CSV</a>
+          <a href="/api/sample/xlsx" download="sample_customers.xlsx">Download sample XLSX</a>
+        </div>        <button id="submit" type="submit">Clean spreadsheet</button>
+        <p id="status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+    <section id="result" class="panel" hidden aria-live="polite">
+      <h2>Results</h2>
+      <div class="metrics">
+        <div class="metric"><strong id="received">0</strong><span>Received</span></div>
+        <div class="metric"><strong id="valid">0</strong><span>Valid</span></div>
+        <div class="metric"><strong id="invalid">0</strong><span>Invalid</span></div>
+        <div class="metric"><strong id="duplicate">0</strong><span>Duplicates</span></div>
+      </div>
+      <div class="downloads">
+        <a id="clean-link" class="download" download="clean_customers.csv">Download clean data</a>
+        <a id="errors-link" class="download secondary" download="errors.csv">Download error report</a>
+      </div>
+      <p class="note">Downloads stay available for one hour. Each issue has its own entry in the report. Use fictional data in this public demo.</p>
+    </section>
+  </main>
+  <script>
+    const form = document.getElementById('upload-form');
+    const status = document.getElementById('status');
+    const result = document.getElementById('result');
+    const submit = document.getElementById('submit');
+    const fileInput = document.getElementById('file');
+    fileInput.addEventListener('change', () => {
+      document.getElementById('file-name').textContent = fileInput.files[0]?.name || 'No file selected';
+    });
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const file = fileInput.files[0];
+      if (!file) return;
+      result.hidden = true;
+      status.className = '';
+      status.textContent = 'Processing…';
+      submit.disabled = true;
+      try {
+        const response = await fetch(`/api/process?filename=${encodeURIComponent(file.name)}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/octet-stream' },
+          body: file
+        });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.detail?.message || 'Could not process the file.');
+        for (const key of ['received', 'valid', 'invalid', 'duplicate']) {
+          document.getElementById(key).textContent = payload.summary[key];
+        }
+        document.getElementById('clean-link').href = payload.downloads.clean;
+        document.getElementById('errors-link').href = payload.downloads.errors;
+        result.hidden = false;
+        status.className = 'ok';
+        status.textContent = 'Spreadsheet processed. Review the summary and download the files.';
+      } catch (error) {
+        status.textContent = error.message;
+      } finally {
+        submit.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

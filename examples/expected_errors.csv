@@ -1,0 +1,12 @@
+source_row,column,original_value,code,message
+7,email,ana.maria@example.com,DUPLICATE_EMAIL,Duplicate email; first valid occurrence on row 2
+8,name,,REQUIRED,Name is required
+9,email,heitor@@example.com,INVALID_EMAIL,Invalid email
+10,email,,REQUIRED,Email is required
+11,phone,123,INVALID_PHONE,Phone must include an area code and 10 or 11 national digits
+12,birth_date,31/02/1993,INVALID_DATE,Invalid or nonexistent date
+13,phone,abc,INVALID_PHONE,Phone must include an area code and 10 or 11 national digits
+13,birth_date,31/02/1993,INVALID_DATE,Invalid or nonexistent date
+16,email,NINA@example.com,DUPLICATE_EMAIL,Duplicate email; first valid occurrence on row 15
+17,birth_date,31/04/2001,INVALID_DATE,Invalid or nonexistent date
+19,birth_date,2999-01-01,FUTURE_DATE,Birth date is after the processing date
