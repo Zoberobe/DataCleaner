@@ -25,7 +25,9 @@ Open `http://127.0.0.1:8000`. On macOS or Linux, use `.venv/bin/python` in place
 
 ## Deploy on Render's free tier
 
-The [render.yaml](render.yaml) Blueprint defines one Python web service on the `free` plan. Connect the GitHub repository in Render, create a Blueprint from it, and deploy. The app binds to Render's `PORT` and needs no database. [Render's free web services](https://render.com/docs/free) sleep after 15 minutes without traffic, so the first visit after inactivity can take about a minute. No real customer data is included in this repository; use fictional data in the public demo.
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Alex-Lize/DataCleaner)
+
+The [render.yaml](render.yaml) Blueprint defines one Python web service on the `free` plan. Click the button, sign in to Render, review the service, and deploy. Later updates require a manual deploy. The app binds to Render's `PORT` and needs no database. [Render's free web services](https://render.com/docs/free) sleep after 15 minutes without traffic, so the first visit after inactivity can take about a minute. No real customer data is included in this repository; use fictional data in the public demo.
 
 ## Rules and API
 
