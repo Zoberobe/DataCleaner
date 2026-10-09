@@ -4,9 +4,11 @@ Upload a messy customer spreadsheet and download two verifiable results: `clean_
 
 ![Messy source, processing summary, clean records, and report examples](portfolio/before_after.png)
 
+**Live demo:** [Try DataCleaner](https://datacleaner-demo.onrender.com). Download the fictional sample on the page and upload it to reproduce the result.
+
 ## Try the fictional sample
 
-1. Download [sample_customers.csv](examples/sample_customers.csv) or [sample_customers.xlsx](examples/sample_customers.xlsx). The demo page also offers both files.
+1. Open the [live demo](https://datacleaner-demo.onrender.com) and download its sample CSV or XLSX. The files are also in this repo: [CSV](examples/sample_customers.csv) and [XLSX](examples/sample_customers.xlsx).
 2. Upload either file. The summary should show **18 received, 8 valid, 8 invalid, and 2 duplicates**.
 3. Download both results and compare them with [expected_clean_customers.csv](examples/expected_clean_customers.csv) and [expected_errors.csv](examples/expected_errors.csv). The report has 11 issue entries because row 13 has two errors.
 
@@ -29,7 +31,7 @@ Open `http://127.0.0.1:8000`. On macOS or Linux, use `.venv/bin/python` in place
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Zoberobe/DataCleaner)
 
-The [render.yaml](render.yaml) Blueprint defines one Python web service on the `free` plan. Click the button, sign in to Render, review the service, and deploy. Later updates require a manual deploy. The app binds to Render's `PORT` and needs no database. [Render's free web services](https://render.com/docs/free) sleep after 15 minutes without traffic, so the first visit after inactivity can take about a minute. No real customer data is included in this repository; use fictional data in the public demo.
+The [render.yaml](render.yaml) Blueprint defines one Python web service on the `free` plan. Click the button, sign in to Render, review the service, and deploy. Copies created with this button require a manual deploy for later updates. The official demo deploys automatically after pushes to `main`. The app binds to Render's `PORT` and needs no database. [Render's free web services](https://render.com/docs/free) sleep after 15 minutes without traffic, so the first visit after inactivity can take about a minute. No real customer data is included in this repository; use fictional data in the public demo.
 
 ## Rules and API
 
