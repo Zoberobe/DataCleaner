@@ -2,6 +2,8 @@
 
 Upload a messy customer spreadsheet and download two verifiable results: `clean_customers.csv` with import-ready rows, and `errors.csv` with the row, column, and reason for every rejection. The fictional sample contains 18 records and produces **8 valid, 8 invalid, and 2 duplicate rows**.
 
+![Messy source, processing summary, clean records, and report examples](portfolio/before_after.png)
+
 ## Try the fictional sample
 
 1. Download [sample_customers.csv](examples/sample_customers.csv) or [sample_customers.xlsx](examples/sample_customers.xlsx). The demo page also offers both files.
@@ -46,7 +48,7 @@ The full cleaning contract is in [RULES_V1.md](RULES_V1.md). `name` and `email` 
 }
 ```
 
-`GET /api/sample/csv` and `GET /api/sample/xlsx` download the fictional inputs. `GET /api/result/{job_id}/clean` returns `clean_customers.csv`; `GET /api/result/{job_id}/errors` returns `errors.csv`. Results remain in memory for one hour. Restarting the server removes them. Run one server process for this version.
+`GET /api/sample/csv` and `GET /api/sample/xlsx` download the fictional inputs. `GET /api/result/{job_id}/clean` returns `clean_customers.csv`; `GET /api/result/{job_id}/errors` returns `errors.csv`. Results remain in memory for up to one hour. Sleeping or restarting the free service can remove them sooner. Run one server process for this version.
 
 ## Version 1 limits
 

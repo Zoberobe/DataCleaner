@@ -1,8 +1,10 @@
+import io
 import json
 from datetime import date
 from pathlib import Path
 
 import pytest
+from openpyxl import Workbook
 
 from datacleaner import InputError, process_file
 
@@ -54,3 +56,17 @@ def test_blank_rows_are_not_counted_and_dates_are_strict():
     assert result.summary == {"received": 2, "valid": 1, "invalid": 1, "duplicate": 0}
     assert b"2024-02-29" in result.clean_csv
     assert b"4,birth_date,29/02/2023,INVALID_DATE" in result.errors_csv
+
+
+def test_xlsx_formula_is_reported_without_using_cached_value():
+    workbook = Workbook()
+    sheet = workbook.active
+    sheet.append(["name", "email", "phone", "birth_date"])
+    sheet.append(["=CONCAT(\"Ada\",\" Lovelace\")", "ada@example.com", "", ""])
+    source = io.BytesIO()
+    workbook.save(source)
+    result = process_file(source.getvalue(), "formula.xlsx", today=TODAY)
+    assert result.summary == {"received": 1, "valid": 0, "invalid": 1, "duplicate": 0}
+    assert b"2,name" in result.errors_csv
+    assert b"FORMULA_NOT_ALLOWED" in result.errors_csv
+    assert result.clean_csv == b"name,email,phone,birth_date\n"

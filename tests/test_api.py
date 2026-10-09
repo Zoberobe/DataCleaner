@@ -1,10 +1,12 @@
 import asyncio
 import json
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import pytest
 
-from app import app
+from app import _jobs, app
+from datacleaner import process_file
 from datacleaner.engine import MAX_BYTES
 
 
@@ -94,3 +96,12 @@ def test_expired_or_unknown_download_returns_404():
     status, content, _ = asyncio.run(exchange("GET", "/api/result/missing/clean"))
     assert status == 404
     assert json.loads(content)["detail"] == "Result expired or not found"
+
+def test_expired_download_is_removed():
+    job_id = "expired-test-result"
+    result = process_file((EXAMPLES / "sample_customers.csv").read_bytes(), "sample_customers.csv")
+    _jobs[job_id] = (datetime.now(timezone.utc) - timedelta(hours=1), result)
+    status, content, _ = asyncio.run(exchange("GET", f"/api/result/{job_id}/clean"))
+    assert status == 404
+    assert json.loads(content)["detail"] == "Result expired or not found"
+    assert job_id not in _jobs

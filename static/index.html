@@ -21,7 +21,9 @@
     #file-name { overflow: hidden; color: #53677a; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
     .hint { margin: 12px 0 22px; color: #607488; font-size: 14px; line-height: 1.5; }
     .sample-links { display: flex; flex-wrap: wrap; gap: 12px; margin: -8px 0 24px; font-size: 14px; }
-    .sample-links a { color: #176c89; font-weight: 700; text-underline-offset: 3px; }    button, .download { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 18px; border: 0; border-radius: 9px; background: #176c89; color: white; font: inherit; font-weight: 700; text-decoration: none; cursor: pointer; }
+    .sample-links a { color: #176c89; font-weight: 700; text-underline-offset: 3px; }
+    .sample-prompt { margin: 0 0 12px; color: #19304a; font-size: 14px; font-weight: 700; }
+    button, .download { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 18px; border: 0; border-radius: 9px; background: #176c89; color: white; font: inherit; font-weight: 700; text-decoration: none; cursor: pointer; }
     button:hover, .download:hover { background: #11546b; }
     button:disabled { opacity: .55; cursor: wait; }
     #status { min-height: 24px; margin: 14px 0 0; color: #9b2f29; }
@@ -52,11 +54,13 @@
           <label class="file-button" for="file">Choose a file</label>
           <span id="file-name">No file selected</span>
         </div>
-        <p class="hint">UTF-8 CSV or XLSX, up to 5 MB and 10,000 data rows. Header: name, email, phone, birth_date.</p>
+        <p class="hint">Use UTF-8 CSV or XLSX with exactly four columns: <code>name</code>, <code>email</code>, <code>phone</code>, and <code>birth_date</code>. Name and email are required. Phone and birth date may be blank. Brazilian phones with an area code become +55 numbers; dates become YYYY-MM-DD. Limit: 5 MB and 10,000 data rows. Use fictional data in this public demo.</p>
+        <p class="sample-prompt">Try the fictional 18-row sample: 8 valid, 8 invalid, and 2 duplicate records.</p>
         <div class="sample-links" aria-label="Fictional sample files">
           <a href="/api/sample/csv" download="sample_customers.csv">Download sample CSV</a>
           <a href="/api/sample/xlsx" download="sample_customers.xlsx">Download sample XLSX</a>
-        </div>        <button id="submit" type="submit">Clean spreadsheet</button>
+        </div>
+        <button id="submit" type="submit">Clean spreadsheet</button>
         <p id="status" role="status" aria-live="polite"></p>
       </form>
     </section>
@@ -72,7 +76,7 @@
         <a id="clean-link" class="download" download="clean_customers.csv">Download clean data</a>
         <a id="errors-link" class="download secondary" download="errors.csv">Download error report</a>
       </div>
-      <p class="note">Downloads stay available for one hour. Each issue has its own entry in the report. Use fictional data in this public demo.</p>
+      <p class="note">Download both files now. Results remain for up to one hour while this instance is active; the free demo can sleep or restart sooner. Each rejected issue has its own report entry.</p>
     </section>
   </main>
   <script>
