@@ -31,7 +31,7 @@ Open `http://127.0.0.1:8000`. On macOS or Linux, use `.venv/bin/python` in place
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Zoberobe/DataCleaner)
 
-The [render.yaml](render.yaml) Blueprint defines one Python web service on the `free` plan. Click the button, sign in to Render, review the service, and deploy. Copies created with this button require a manual deploy for later updates. The official demo deploys automatically after pushes to `main`. The app binds to Render's `PORT` and needs no database. [Render's free web services](https://render.com/docs/free) sleep after 15 minutes without traffic, so the first visit after inactivity can take about a minute. No real customer data is included in this repository; use fictional data in the public demo.
+The [render.yaml](render.yaml) Blueprint defines one Python web service on the `free` plan. Click the button, sign in to Render, review the service, and deploy. The Blueprint disables automatic redeploys for copies created with this button. For the official demo, trigger a new deploy in Render after pushing changes until its GitHub push integration is enabled. The app binds to Render's `PORT` and needs no database. [Render's free web services](https://render.com/docs/free) sleep after 15 minutes without traffic, so the first visit after inactivity can take about a minute. No real customer data is included in this repository; use fictional data in the public demo.
 
 ## Rules and API
 
